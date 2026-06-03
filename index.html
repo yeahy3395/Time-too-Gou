@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Ally</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        // 修正 Service Worker 注册逻辑
+        // 只有当页面通过 http 或 https 协议加载时才注册，避免在 blob: 或 data: 等预览环境中报错
+        if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then((registration) => {
+                        console.log('PWA Service Worker 注册成功，作用域为:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('PWA Service Worker 注册失败:', error);
+                    });
+            });
+        } else {
+            console.warn('当前协议不支持 Service Worker 或浏览器不支持该功能。');
+        }
+    </script>
+</body>
+</html>
